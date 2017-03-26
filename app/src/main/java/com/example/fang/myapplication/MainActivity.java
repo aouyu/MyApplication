@@ -12,6 +12,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,14 +33,6 @@ import jp.wasabeef.blurry.Blurry;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
-     * 左上角的返回按钮
-     */
-    private ImageButton mBackHeaderusinf;
-    /**
-     * 右上角的按钮
-     */
-    private ImageButton mMoreHeaderusinf;
-    /**
      * 用户的icon
      */
     private ImageView mIconHeaderusinf;
@@ -54,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 底部的私信按钮
      */
-    private TextView mSixin;
+    private TextView mSixin, tvTitle;
     private View mBottomContainer;
 
     private ViewPager viewPager;
@@ -62,6 +55,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AppBarLayout appBarLayout;
     private String strImageUrl = "http://avatar.csdn.net/E/D/5/1_xyz_lmn.jpg";
+
+    private CollapsingToolbarLayoutState state;
+
+    private enum CollapsingToolbarLayoutState {
+        EXPANDED,
+        COLLAPSED,
+        INTERNEDIATE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +91,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //找到了tabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        mBackHeaderusinf = (ImageButton) findViewById(R.id.back_headerusinf);
-        mMoreHeaderusinf = (ImageButton) findViewById(R.id.more_headerusinf);
         mIconHeaderusinf = (ImageView) findViewById(R.id.icon_headerusinf);
         imageView = (ImageView) findViewById(R.id.image);
         mConcern = (TextView) findViewById(R.id.cancelfocus);
         mSixin = (TextView) findViewById(R.id.tv_shixin);
         mBottomContainer = findViewById(R.id.bottom_userdetail);
+
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.base_toolbar_menu);//设置右上角的填充菜单
+//        setSupportActionBar(toolbar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                if (verticalOffset == 0) {
+                    if (state != CollapsingToolbarLayoutState.EXPANDED) {
+                        state = CollapsingToolbarLayoutState.EXPANDED;//修改状态标记为展开
+                    }
+                } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                    if (state != CollapsingToolbarLayoutState.COLLAPSED) {
+                        tvTitle.setVisibility(View.VISIBLE);//隐藏播放按钮
+                        state = CollapsingToolbarLayoutState.COLLAPSED;//修改状态标记为折叠
+                    }
+                } else {
+                    if (state != CollapsingToolbarLayoutState.INTERNEDIATE) {
+                        if(state == CollapsingToolbarLayoutState.COLLAPSED){
+                            tvTitle.setVisibility(View.GONE);//由折叠变为中间状态时隐藏播放按钮
+                        }
+                        state = CollapsingToolbarLayoutState.INTERNEDIATE;//修改状态标记为中间
+                    }
+                }
+            }
+        });
     }
 
     private void initListener() {
-        mBackHeaderusinf.setOnClickListener(this);
-        mMoreHeaderusinf.setOnClickListener(this);
         mConcern.setOnClickListener(this);
         mSixin.setOnClickListener(this);
     }
@@ -113,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //给viewpager 关联一共tablayotu
         tabLayout.setupWithViewPager(viewPager);
-        new BlurThread().start();
+        Picasso.with(this).load(strImageUrl).into(imageView);
+//        new BlurThread().start();
     }
 
     //虚化图片Thread
@@ -195,16 +224,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_headerusinf:
-                finish();
-                break;
-            case R.id.more_headerusinf:
+            case R.id.cancelfocus:
                 Toast.makeText(this, "SecondActivity", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SecondActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_shixin:
-                Toast.makeText(this, "私信", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "ThirdActivity", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, ThirdActivity.class);
+                startActivity(intent2);
                 break;
         }
     }
