@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.fang.myapplication.R;
+
 import java.lang.reflect.Field;
 
 /**
@@ -172,7 +174,7 @@ public class ParallaxScaleBehavior extends AppBarLayout.Behavior {
                 }
             }
         }
-        return appBarLayout.findViewById(com.github.anzewei.design.R.id.image);
+        return appBarLayout.findViewById(R.id.image);
     }
 
     /**

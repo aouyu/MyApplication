@@ -13,15 +13,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fang.myapplication.views.MyViewPager;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mSixin, tvTitle;
     private View mBottomContainer;
 
-    private ViewPager viewPager;
+    private MyViewPager viewPager;
     private TabLayout tabLayout;
 
     private AppBarLayout appBarLayout;
-    private String strImageUrl = "http://avatar.csdn.net/E/D/5/1_xyz_lmn.jpg";
+    private String strImageUrl = "http://img4.imgtn.bdimg.com/it/u=2609553881,3298543509&fm=23&gp=0.jpg";
 
     private CollapsingToolbarLayoutState state;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
 
         //找到viewpager
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (MyViewPager) findViewById(R.id.viewpager);
         //找到了tabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
